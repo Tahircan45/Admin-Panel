@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Admin_Panel.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,12 +12,12 @@ namespace Admin_Panel.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<WebUser> _userManager;
+        private readonly SignInManager<WebUser> _signInManager;
 
         public IndexModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            UserManager<WebUser> userManager,
+            SignInManager<WebUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -35,9 +36,16 @@ namespace Admin_Panel.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
         }
 
-        private async Task LoadAsync(IdentityUser user)
+        private async Task LoadAsync(WebUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
@@ -46,7 +54,9 @@ namespace Admin_Panel.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                LastName=user.LastName,
+                FirstName=user.FirstName
             };
         }
 
@@ -75,17 +85,17 @@ namespace Admin_Panel.Areas.Identity.Pages.Account.Manage
                 await LoadAsync(user);
                 return Page();
             }
+            user.FirstName = Input.FirstName;
+            user.LastName = Input.LastName;
+            user.PhoneNumber = Input.PhoneNumber;
+           
+            var result = await _userManager.UpdateAsync(user);
 
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            if (Input.PhoneNumber != phoneNumber)
+            if (!result.Succeeded)
             {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
-                {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
-                    return RedirectToPage();
-                }
-            }
+                StatusMessage = "Unexpected error when trying to set phone number.";
+                return RedirectToPage();
+            }          
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
