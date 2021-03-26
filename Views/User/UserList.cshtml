@@ -55,7 +55,7 @@
                                     <td>
                                         @foreach (var role in UserManager.GetRolesAsync(user).Result)
                                         {
-                                            @role
+                                            @role<span></span>                                                 
                                         }
                                     </td>
                                     <td><a asp-action="UserEdit" asp-route-id="@user.Id">Edit</a></td>

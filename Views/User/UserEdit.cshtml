@@ -1,7 +1,10 @@
 ﻿@using Admin_Panel.Data;
+@using  Microsoft.AspNetCore.Identity;
 @model WebUser;
-@inject Microsoft.AspNetCore.Identity.UserManager<WebUser> UserManager
+@inject UserManager<WebUser> UserManager
 @{
+    var userroles = UserManager.GetRolesAsync(Model).Result;
+    var roles = (List<IdentityRole>)ViewData["roles"];
     ViewData["Title"] = "UserEdit";
 }
 <!-- Main content -->
@@ -35,9 +38,10 @@
                             </li>
                             <li class="list-group-item">
                                 <b>Roles</b>
-                                @foreach (var role in UserManager.GetRolesAsync(Model).Result)
+                                @foreach (var role in userroles)
                                 {
                                     <a class="float-right">@role</a>
+                                    <br />
                                 }
                             </li>
                         </ul>
@@ -65,13 +69,17 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <p>One fine body&hellip;</p>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+            <form asp-controller="User" asp-action="AddRole" method="post">
+                <div class="modal-body">
+                    <select name="rolename" asp-items="@(new SelectList(roles,"Name","Name"))"></select>
+                    <input hidden="hidden" value="@Model.Id" name="Id">
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+
         </div>
         <!-- /.modal-content -->
     </div>
@@ -86,13 +94,21 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <p>One fine body&hellip;</p>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+            <form asp-controller="User" asp-action="DeleteRole" method="post">
+                <div class="modal-body">
+                    <select name="rolename">
+                        @foreach (var role in userroles)
+                        {
+                            <option value="@role">@role</option>
+                        }
+                    </select>
+                    <input hidden="hidden" value="@Model.Id" name="Id">
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
         </div>
         <!-- /.modal-content -->
     </div>

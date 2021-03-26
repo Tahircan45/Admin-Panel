@@ -39,8 +39,23 @@ namespace Admin_Panel.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<WebUser>> UserEdit(string id)
         {
+            ViewData["roles"] = _roleManager.Roles.ToList();            
             var user= await _userManager.FindByIdAsync(id);
             return View(user);
+        }
+        [HttpPost]
+        public async Task<ActionResult<WebUser>> AddRole(string rolename,string Id)
+        {
+            var user = await _userManager.FindByIdAsync(Id);
+            var  result= await _userManager.AddToRoleAsync(user,rolename);
+            return RedirectToAction("UserList");
+        }
+        [HttpPost]
+        public async Task<ActionResult<WebUser>> DeleteRole(string rolename, string Id)
+        {
+            var user = await _userManager.FindByIdAsync(Id);
+            var result = await _userManager.RemoveFromRoleAsync(user, rolename);
+            return RedirectToAction("UserList");
         }
     }
 }
