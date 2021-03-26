@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Admin_Panel.Controllers
 {
-    
+    [Authorize(Roles ="Admin,Manager")]
     public class UserController : Controller
     {
         private readonly UserManager<WebUser> _userManager;
