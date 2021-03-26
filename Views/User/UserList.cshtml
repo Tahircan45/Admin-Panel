@@ -40,23 +40,27 @@
                                     <th>Email</th>
                                     <th>Created Time</th>
                                     <th>Roles</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var user in Model)
                                 {
-                                    <tr>
-                                        <td>@user.FirstName</td>
-                                        <td>@user.LastName</td>
-                                        <td>@user.Email</td>
-                                        <td>@user.CreatedTime</td>
-                                        <td>
-                                            @foreach (var role in UserManager.GetRolesAsync(user).Result)
-                                            {
-                                                @role
-                                            }
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td>@user.FirstName</td>
+                                    <td>@user.LastName</td>
+                                    <td>@user.Email</td>
+                                    <td>@user.CreatedTime</td>
+                                    <td>
+                                        @foreach (var role in UserManager.GetRolesAsync(user).Result)
+                                        {
+                                            @role
+                                        }
+                                    </td>
+                                    <td><a asp-action="UserEdit" asp-route-id="@user.Id">Edit</a></td>
+                                    <td><a asp-action="Delete" asp-route-id="@user.Id">Delete</a></td>
+                                </tr>
 
                                 }
                             </tbody>

@@ -1,0 +1,101 @@
+﻿@using Admin_Panel.Data;
+@model WebUser;
+@inject Microsoft.AspNetCore.Identity.UserManager<WebUser> UserManager
+@{
+    ViewData["Title"] = "UserEdit";
+}
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+
+                <!-- Profile Image -->
+                <div class="card card-primary card-outline">
+                    <div class="card-body box-profile">
+                        <div class="text-center">
+                            <img class="profile-user-img img-fluid img-circle"
+                                 src="../../dist/img/user4-128x128.jpg"
+                                 alt="User profile picture">
+                        </div>
+
+                        <h3 class="profile-username text-center">Nina Mcintire</h3>
+
+                        <p class="text-muted text-center">Software Engineer</p>
+
+                        <ul class="list-group list-group-unbordered mb-3">
+                            <li class="list-group-item">
+                                <b>First Name</b> <a class="float-right">@Model.FirstName</a>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Last Name</b> <a class="float-right">@Model.LastName</a>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Email</b> <a class="float-right">@Model.Email</a>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Roles</b>
+                                @foreach (var role in UserManager.GetRolesAsync(Model).Result)
+                                {
+                                    <a class="float-right">@role</a>
+                                }
+                            </li>
+                        </ul>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-default-add">
+                            Add Role
+                        </button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-default-delete">
+                            Delete Role
+                        </button>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+<div class="modal fade" id="modal-default-add">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Role A User</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>One fine body&hellip;</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modal-default-delete">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete A Role From User</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>One fine body&hellip;</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

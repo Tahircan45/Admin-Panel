@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Admin_Panel.Controllers
 {
-    [Authorize(Roles="Manager")]
+    
     public class UserController : Controller
     {
         private readonly UserManager<WebUser> _userManager;
@@ -34,6 +34,13 @@ namespace Admin_Panel.Controllers
                                          user.FirstName.Contains(keyword))
                                          .ToList();
             return View(roleresult);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<WebUser>> UserEdit(string id)
+        {
+            var user= await _userManager.FindByIdAsync(id);
+            return View(user);
         }
     }
 }
