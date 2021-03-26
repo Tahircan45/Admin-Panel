@@ -1,0 +1,74 @@
+﻿@using Admin_Panel.Data
+@using Microsoft.AspNetCore.Identity;
+@model List<WebUser>
+@inject Microsoft.AspNetCore.Identity.UserManager<WebUser> UserManager
+@{
+    ViewData["Title"] = "Users";
+}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">User Table</h3>
+                        <div class="card-tools">
+                            <div class="input-group input-group-sm" style="width: 150px;">
+                                <form asp-controller="User" asp-action="UserList" method="post">
+                                    <input type="text" name="keyword" class="form-control float-right" placeholder="Search">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-default">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <a class="btn btn-default" asp-action="UserList">
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email</th>
+                                    <th>Created Time</th>
+                                    <th>Roles</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in Model)
+                                {
+                                    <tr>
+                                        <td>@user.FirstName</td>
+                                        <td>@user.LastName</td>
+                                        <td>@user.Email</td>
+                                        <td>@user.CreatedTime</td>
+                                        <td>
+                                            @foreach (var role in UserManager.GetRolesAsync(user).Result)
+                                            {
+                                                @role
+                                            }
+                                        </td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->

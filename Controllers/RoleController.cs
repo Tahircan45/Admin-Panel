@@ -14,12 +14,12 @@ namespace Admin_Panel.Controllers
         {
             _roleManager = roleManager;
         }
-        public IActionResult Index()
+        public IActionResult RoleList()
         {
             var roles = _roleManager.Roles.ToList();
             return View(roles);
         }
-        public IActionResult Create()
+        public IActionResult RoleCreate()
         {
             return View(new IdentityRole());
         }
