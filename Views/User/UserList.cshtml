@@ -11,11 +11,13 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">User Table</h3>
+                        <h3 class="card-title">List of All User</h3>
+
                         <div class="card-tools">
-                            <div class="input-group input-group-sm" style="width: 150px;">
-                                <form asp-controller="User" asp-action="UserList" method="post">
+                            <form asp-controller="User" asp-action="UserList" method="post">
+                                <div class="input-group input-group-sm" style="width: 150px;">
                                     <input type="text" name="keyword" class="form-control float-right" placeholder="Search">
+
                                     <div class="input-group-append">
                                         <button type="submit" class="btn btn-default">
                                             <i class="fas fa-search"></i>
@@ -26,8 +28,8 @@
                                             <i class="fas fa-times"></i>
                                         </a>
                                     </div>
-                                </form>
-                            </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <!-- /.card-header -->
@@ -47,26 +49,53 @@
                             <tbody>
                                 @foreach (var user in Model)
                                 {
-                                <tr>
-                                    <td>@user.FirstName</td>
-                                    <td>@user.LastName</td>
-                                    <td>@user.Email</td>
-                                    <td>@user.CreatedTime</td>
-                                    <td>
-                                        @{ 
-                                            var roles = UserManager.GetRolesAsync(user).Result;
-                                            int last = roles.Count - 1;
-                                            int index = 0;
-                                            @foreach (var role in roles)
-                                            {
-                                                @role if (index!=last) {<span> | </span>}
-                                                index++;
+                                    <tr>
+                                        <td>@user.FirstName</td>
+                                        <td>@user.LastName</td>
+                                        <td>@user.Email</td>
+                                        <td>@user.CreatedTime</td>
+                                        <td>
+                                            @{
+                                                var roles = UserManager.GetRolesAsync(user).Result;
+                                                int last = roles.Count - 1;
+                                                int index = 0;
+                                                @foreach (var role in roles)
+                                                {
+                                                    @role if (index != last)
+                                                    {<span> | </span>}
+                                                    index++;
+                                                }
                                             }
-                                        }                                      
-                                    </td>
-                                    <td><a asp-action="UserEdit" asp-route-id="@user.Id">Edit</a></td>
-                                    <td><a asp-action="Delete" asp-route-id="@user.Id">Delete</a></td>
-                                </tr>
+                                        </td>
+                                        <td><a asp-controller="User" asp-action="UserEdit" asp-route-id="@user.Id">Edit</a></td>
+                                        <td>
+                                            <a href="#bannerformmodal" data-toggle="modal" data-target="#modal-danger-@user.Id">Delete</a>
+
+                                            <div class="modal fade" id="modal-danger-@user.Id">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content bg-danger">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Delete User</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Do you want delete this user ?</p>
+                                                            <p>@user.Email</p>
+
+                                                        </div>
+                                                        <div class="modal-footer justify-content-between">
+                                                            <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                                                            <a type="button" class="btn btn-outline-light" asp-controller="User" asp-action="DeleteUser" asp-route-id="@user.Id">Delete</a>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                        </td>
+                                    </tr>
 
                                 }
                             </tbody>
@@ -82,3 +111,4 @@
     </div><!-- /.container-fluid -->
 </section>
 <!-- /.content -->
+

@@ -31,5 +31,12 @@ namespace Admin_Panel.Controllers
             await _roleManager.CreateAsync(role);
             return RedirectToAction("RoleList");
         }
+        [HttpPost]
+        public async Task<IActionResult> RoleDelete(string id)
+        {
+            var role = await _roleManager.FindByIdAsync(id);
+            await _roleManager.DeleteAsync(role);
+            return RedirectToAction("RoleList");
+        }
     }
 }

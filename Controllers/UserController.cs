@@ -2,14 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Admin_Panel.Controllers
 {
-    [Authorize(Roles ="Admin,Manager")]
+    [Authorize(Roles = "Manager")]
     public class UserController : Controller
     {
         private readonly UserManager<WebUser> _userManager;
@@ -37,24 +35,33 @@ namespace Admin_Panel.Controllers
         }
 
         [HttpGet("{id}")]
+        [Route("/UserEdit")]
         public async Task<ActionResult<WebUser>> UserEdit(string id)
         {
-            ViewData["roles"] = _roleManager.Roles.ToList();            
-            var user= await _userManager.FindByIdAsync(id);
+            ViewData["roles"] = _roleManager.Roles.ToList();
+            var user = await _userManager.FindByIdAsync(id);
             return View(user);
         }
         [HttpPost]
-        public async Task<ActionResult<WebUser>> AddRole(string rolename,string Id)
+        public async Task<ActionResult<WebUser>> AddRole(string rolename, string Id)
         {
             var user = await _userManager.FindByIdAsync(Id);
-            var  result= await _userManager.AddToRoleAsync(user,rolename);
-            return RedirectToAction("UserList");
+            var result = await _userManager.AddToRoleAsync(user, rolename);
+            return RedirectToAction("UserEdit", new { Id = Id });
         }
         [HttpPost]
         public async Task<ActionResult<WebUser>> DeleteRole(string rolename, string Id)
         {
             var user = await _userManager.FindByIdAsync(Id);
             var result = await _userManager.RemoveFromRoleAsync(user, rolename);
+            return RedirectToAction("UserEdit", new { Id = Id });
+        }
+        [HttpGet("{id}")]
+        [Route("/DeleteUser")]
+        public async Task<ActionResult<WebUser>> DeleteUser(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var result = await _userManager.DeleteAsync(user);
             return RedirectToAction("UserList");
         }
     }
